@@ -1,0 +1,8 @@
+/* Overrides text-decoration:underline */
+table a:not(.btn), .table a:not(.btn) {
+  text-decoration:none;
+}
+
+.tab-pane {
+  padding: 15px;
+}

@@ -1,0 +1,27 @@
+
+<table class="table sim-table sim-table-striped sim-table-hover ">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Name</th>
+      <th><!-- caret alignment --></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for sim, sim_json in sim_list_with_json %}
+    <tr class="sim-prefix simulation" data-uuid="{{ sim.id }}">
+      <td class="time-elapsed">{{ sim.t_elapsed }}</td>
+      <td>{{ sim.id }}</td>
+      <td><span class="caret"></span></td>
+    </tr>
+    <tr class="sim-detail sim-{{ sim.id }}"><td colspan="3">
+      <div class="closed"><div class="content"></div></div>
+      <div class="hidden params-json">{{ sim_json }}</div>
+    </td></tr>
+    {% else %}
+    <tr>
+      <td colspan="2">No simulations running.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>

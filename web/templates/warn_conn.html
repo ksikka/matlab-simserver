@@ -1,0 +1,8 @@
+<div class="alert alert-warning">
+  <h4><strong>Simulation server unreachable</strong></h4>
+  <p>The connection to the simulation server is down.
+  {% if t_elapsed_since_last_call != None %}
+  Displaying cached data from <span class="time-elapsed">{{ t_elapsed_since_last_call }}</span>.
+  {% endif %}
+</p>
+</div>

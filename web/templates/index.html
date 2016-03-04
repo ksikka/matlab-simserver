@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <link rel="stylesheet" type="text/css" href="http://bootswatch.com/cosmo/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/sim-global.css">
+    <link rel="stylesheet" type="text/css" href="/static/sim-table.css">
+    <link rel="stylesheet" type="text/css" href="/static/sim-detail.css">
+    <link rel="stylesheet" type="text/css" href="/static/sim-new.css">
+    <link rel="stylesheet" type="text/css" href="/static/sim-repl.css">
+    <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+    <script src="http://malsup.github.io/min/jquery.form.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <script src="/static/moment.min.js"></script>
+    <script src="/static/lodash.min.js"></script>
+    {% if t_elapsed_since_last_call != 0 %}
+    <script type="text/javascript">var backendDown = true;</script>
+    {% else %}
+    <script type="text/javascript">var backendDown = false;</script>
+    {% endif %}
+
+  </head>
+
+
+  <body>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+
+          {% if t_elapsed_since_last_call != 0 %}
+          {% include 'warn_conn.html' %}
+          {% endif %}
+
+          <div class="page-header">
+	    <div style="min-height:1em">
+	      <div style="float:right">
+	      Logged in as <a href="#">{{ g.username }}</a> | <a href="#">Logout</a>
+	      </div>
+	    </div>
+
+            <h1>Simulations
+            <div style="float:right"
+{% if t_elapsed_since_last_call != 0 %} data-toggle="tooltip" data-placement="left" title="" data-original-title="Sim Server Unreachable :-("{% endif %}>
+            <input class="btn btn-default btn-sm sim-new {% if t_elapsed_since_last_call != 0 %}disabled{% endif %}" type="button" value="+ New Simulation">
+            <input class="btn btn-default btn-sm sync-users {% if t_elapsed_since_last_call != 0 %}disabled{% endif %}" type="button" value="Sync WinFS">
+            <form method="POST" action="/sync_users/" class="sync-users hidden">
+              <input type="submit">
+            </form>
+            </div>
+            </h1>
+          </div>
+
+          <form class="sim-new hidden" action="/sim/create/rdr/" method="POST">
+            <legend>New Simulation</legend>
+
+            <label>Simulation</label>
+            {% if sim_type_list == [] %}
+            <p>(No simulations found)</p>
+            {% else %}
+            <select name="sim_name" class="form-control">
+              {% for name in sim_type_list %}
+              <option value="{{ name }}">{{ name }}</option>
+              {% endfor %}
+            </select>
+            {% endif %}
+            <div class="space"></div>
+
+            <label>Params</label>
+            <!--<textarea class="form-control">To be implemented.</textarea>-->
+            <textarea name="params_json" rows="4" spellcheck="false" class="form-control">[1427195732, &quot;twister&quot;, &quot;adult#002.mat&quot;, &quot;atos.mat&quot;]</textarea>
+            <div class="space"></div>
+
+            <label>Handle Name</label>
+            <input name="handle_name" class="form-control" type="input" value="sim">
+            <div class="space"></div>
+
+            <label>Make Snapshot</label>
+            <input type="checkbox" name="make_snapshot" value="1" checked />
+            <div class="space"></div>
+
+            <input class="btn btn-default btn-sm" type="submit" value="Start Simulation">
+            <img class="ajax-loader hidden" src="/static/ajax-loader.gif">
+          </form>
+
+          {% include 'sim_list.html' %}
+
+        </div>
+      </div>
+
+
+      <script id="sim-detail-template" type="text/template">
+
+<ul class="nav nav-tabs">
+  <li class=""><a href="#" data-target=".sim-<%- simId %> .tab-pane.params" data-toggle="tab" aria-expanded="false">Params</a></li>
+  <li class="active"><a href="#" data-target=".sim-<%- simId %> .tab-pane.current-state" data-toggle="tab" aria-expanded="true">Current State</a></li>
+  <li><a href="#" data-target=".sim-<%- simId %> .tab-pane.actions" data-toggle="tab">Actions</a></li>
+  <li class="dropdown">
+    <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">Delete</a>
+    <ul class="dropdown-menu">
+      <!--<li class="divider"></li> -->
+      <li><a class="sim-delete-btn"href="#">Click to confirm...</a></li>
+    </ul>
+  </li>
+</ul>
+<div class="tab-content">
+  <div class="tab-pane params">
+    <div class="params well well-lg">
+      <%- params %>
+    </div>
+  </div>
+  <div class="tab-pane current-state active in">
+    <% if (backendDown) { %>
+    Service Unavailable :-(
+    <% } else { %>
+    Loading...
+    <% } %>
+    <div class="space"></div>
+    <div class="space"></div>
+    <div class="space"></div>
+  </div>
+  <div class="tab-pane actions">
+  </div>
+</div>
+  </script>
+
+  <script id="repl-template" type="text/template">
+    <div class="repl-line">
+      <span class="lt-dec">&gt;</span><input spellcheck='false' class="statement" type="text"><span class="nargout-label">, nargout=</span><input spellcheck='false' class="nargout" type="text" value="1">
+    </div>
+  </script>
+
+  <script id="sim-detail-current-state-template" type="text/template">
+    <% if (status.backendDown) { %>
+    Service Unavailable :-(
+    <div class="space"></div>
+    <div class="space"></div>
+    <div class="space"></div>
+    <% } else { %>
+    Result
+    <div class="well well-lg">
+      <%= result %>
+    </div>
+    <% if (out !== '') { %>
+    stdout
+    <div class="well well-lg">
+      <%= out %>
+    </div>
+    <% } %>
+    <% if (err !== '') { %>
+    stderr
+    <div class="well well-lg">
+      <%= err %>
+    </div>
+    <% } %>
+    <% } %>
+      </script>
+
+
+      <script>
+      $('.time-elapsed').each(function(i, e) {
+          e.innerHTML = moment.unix(Math.floor((new Date).getTime()/1000) - parseInt(e.innerHTML) * 60).fromNow();
+      });
+      </script>
+
+      <script>
+      $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+      });
+      </script>
+
+      <script src="/static/script.js"></script>
+
+    </div>
+  </body>
+</html>

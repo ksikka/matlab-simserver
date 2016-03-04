@@ -1,0 +1,2 @@
+Pyro==3.16
+ntfsutils==0.1.3

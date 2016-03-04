@@ -1,0 +1,24 @@
+.repl-line > * {
+  font-family: Monaco, "Lucida Console", monospace;
+  background-color: lightgoldenrodyellow;
+  padding: 7px;
+}
+
+.repl-line input {
+  border: 0;
+}
+.repl-line input:focus {
+  outline: 0;
+}
+
+.repl-line .statement {
+  width: 60%;
+}
+.repl-line .nargout-label {
+  width: 15%
+}
+.repl-line span {
+}
+.repl-line .nargout {
+  width: 15%;
+}

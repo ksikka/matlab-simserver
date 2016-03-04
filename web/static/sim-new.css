@@ -1,0 +1,20 @@
+.btn.sim-new {
+  -webkit-transition: 100ms ease-out;
+  -moz-transition: 100ms ease-out;
+  -o-transition: 100ms ease-out;
+  transition: 100ms ease-out;
+}
+.btn.sim-new:hover {
+  transform: translate(0px, -2px);
+  -webkit-transform: translate(0px, -2px);
+  -moz-transform: translate(0px, -2px);
+  -o-transform: translate(0px, -2px);
+  -ms-transform: translate(0px, -2px);
+}
+
+form.sim-new {
+  padding: 0 25px 35px 25px;
+  border-bottom: 1px solid #e6e6e6;
+  max-width:400px;
+}
+

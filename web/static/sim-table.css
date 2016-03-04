@@ -1,0 +1,57 @@
+.sim-table {
+  /*so that table fits in containing div*/
+  table-layout: fixed;
+}
+/* http://www.w3.org/TR/CSS2/tables.html#fixed-table-layout */
+.sim-table thead tr th:nth-child(1) {
+  width: 135px;
+}
+.sim-table thead tr th:nth-child(3) {
+  width: 35px;
+}
+
+tr.simulation:hover {
+  cursor: pointer;
+}
+.simulation .caret {
+  transition: opacity .25s ease-in-out;
+  -moz-transition: opacity .25s ease-in-out;
+  -webkit-transition: opacity .25s ease-in-out;
+}
+.simulation .caret.light {
+  opacity: 0.5;
+}
+/* Copied and modified to implement expandable table row.
+     "The :nth-of-type(n) selector matches every element that is the nth child, of a particular type, of its parent."
+ */
+.sim-table-striped > tbody > tr.sim-prefix:nth-of-type(4n+1) {
+  background-color: #f9f9f9;
+}
+.sim-table-hover > tbody > tr.sim-prefix:hover {
+  background-color: #f5f5f5;
+}
+/* detail gets shown when sim is clicked to active state */
+tr.sim-detail > td  {
+  padding: 0 !important;
+  border: none !important;
+}
+tr.sim-detail > td > div {
+  overflow-y: hidden;
+}
+/* pure css slideup/slidedown, modified from:
+     http://davidwalsh.name/css-slide 
+   div inside td because this hack doens't work well on td.
+   div inside that one in order to make td close tight.  */
+tr.sim-detail > td > div {
+  max-height: 5000px; /* approximate max height */
+  transition-property: max-height,height;
+  transition-duration: .55s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.3, 1);
+
+}
+tr.sim-detail > td > div.closed {
+  max-height:0;
+}
+tr.sim-detail > td > div > div.content {
+  padding-top:15px;
+}
